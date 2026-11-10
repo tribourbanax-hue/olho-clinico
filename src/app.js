@@ -145,6 +145,21 @@ function Palco(regKey, altura) {
   palcoAtual = api;
   return api;
 }
+// seta que aponta a parte: entra pelo lado de fora do corpo (como nos livros),
+// e vira para o outro lado se não couber no quadro.
+const SETA_SVG = `<svg width="84" height="34" viewBox="0 0 84 34"><g class="bob"><path d="M3 17 L27 3 L27 12 L81 12 L81 22 L27 22 L27 31 Z" fill="#e5484d" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke"/></g></svg>`;
+function seta(pal, hot) {
+  const p = pal.pos(hot), W = pal.el.clientWidth;
+  let dir = hot[0] >= 50 ? 1 : -1;                 // 1 = vem da direita
+  if (dir === 1 && p.x > W - 80) dir = -1; else if (dir === -1 && p.x < 80) dir = 1;
+  const baixo = p.y < 70;                          // perto do topo: seta vem de baixo
+  const ang = dir === 1 ? (baixo ? 35 : -35) : (baixo ? 145 : 215);
+  const el = h("div", { class: "seta" }); el.innerHTML = SETA_SVG;
+  el.firstChild.style.transform = `rotate(${ang}deg)`;
+  pal.add(el, hot);
+  const r = (ang * Math.PI) / 180, tx = Math.cos(r) * 92, ty = Math.sin(r) * 92;
+  return { el, etq: `translate(calc(-50% + ${tx.toFixed(0)}px), calc(-50% + ${ty.toFixed(0)}px))` };
+}
 let palcoAtual = null, relogio = null;
 addEventListener("resize", () => { if (palcoAtual && palcoAtual.el.isConnected) palcoAtual.montar(); });
 const alturaCheia = (Fw, r) => Math.round(Math.min(innerHeight * 0.62, Math.max(260, Fw * r.h / r.w)));
@@ -154,7 +169,7 @@ const alturaZoom = () => Math.round(Math.min(330, Math.max(240, innerHeight * 0.
 function tela(...kids) {
   if (relogio) { clearInterval(relogio); relogio = null; }
   palcoAtual = null;
-  app.replaceChildren(...kids);
+  app.replaceChildren(...kids.flat(Infinity).filter((k) => k != null && k !== false));
   scrollTo(0, 0);
 }
 const topo = (titulo, sub, volta = inicio) => h("div", { class: "top" }, h("button", { class: "voltar", onclick: volta, "aria-label": "Voltar" }, "←"), h("div", { style: "flex:1" }, h("h2", {}, titulo), sub ? h("div", { class: "sub" }, sub) : null));
@@ -240,8 +255,8 @@ function rodada(lista, titulo, volta) {
   function pergunta() {
     if (i >= lista.length) return fim();
     const p = lista[i], pal = Palco(p.reg, alturaZoom);
-    const alvo = pal.add(h("div", { class: "alvo" }), p.hot);
     const etq = pal.add(h("div", { class: "etq" }, p.nome), p.hot);
+    let s;
     pal.el.append(h("div", { class: "cont" }, REGIOES[p.reg].rotulo));
     const ops = opcoes(p), area = h("div");
     const comboEl = h("div", { class: "combo" }, combo >= 2 ? `🔥 ${combo} seguidas!` : "");
@@ -251,7 +266,7 @@ function rodada(lista, titulo, volta) {
       const certo = o === p.nome; registra(p.id, certo);
       if (certo) { acertos++; combo++; melhorCombo = Math.max(melhorCombo, combo); bip("ok"); } else { combo = 0; erros.push(p); bip("erro"); }
       comboEl.textContent = certo ? (combo >= 2 ? `🔥 ${combo} seguidas!` : "✅ Isso!") : "❌ Era " + p.nome;
-      alvo.classList.add("peq"); pal.inteiro(); etq.classList.add("on");
+      s.el.classList.add("peq"); pal.inteiro(); etq.classList.add("on");
       area.append(h("div", { class: "dica" }, h("b", {}, p.nome), p.dica),
         h("button", { class: "cta" + (certo ? " verde" : ""), style: "margin-top:12px", onclick: () => { i++; pergunta(); } }, i + 1 < lista.length ? "Continuar →" : "Ver resultado"));
     }
@@ -260,6 +275,7 @@ function rodada(lista, titulo, volta) {
       pal.el, h("div", { class: "qtxt" }, p.osso ? "Que osso é esse?" : "Que parte é essa?"), comboEl,
       h("div", { class: "ops" }, btns), area);
     pal.montar(); pal.semAnim(() => pal.focar(p.hot));
+    s = seta(pal, p.hot); etq.style.transform = s.etq;
   }
   function fim() {
     const pct = acertos / lista.length, est = pct === 1 ? 3 : pct >= 0.7 ? 2 : pct >= 0.4 ? 1 : 0;
@@ -372,7 +388,6 @@ function relampago() {
   function prox() {
     if (idx >= fila.length) { fila = embaralha(PARTES); idx = 0; }
     const p = fila[idx++], pal = Palco(p.reg, alturaZoom);
-    pal.add(h("div", { class: "alvo" }), p.hot);
     const btns = opcoes(p).map((o) => h("button", { class: "op", onclick: () => {
       if (travado) return; travado = true;
       const certo = o === p.nome; registra(p.id, certo);
@@ -382,6 +397,7 @@ function relampago() {
     } }, o));
     corpo.replaceChildren(pal.el, h("div", { class: "qtxt" }, p.osso ? "Que osso é esse?" : "Que parte é essa?"), h("div", { class: "ops" }, btns));
     pal.montar(); pal.semAnim(() => pal.focar(p.hot));
+    seta(pal, p.hot);
   }
   tela(topo("⚡ Relâmpago", "Errou = perde 3 segundos"), h("div", { class: "hud" }, h("span", {}, "⏱ ", tempo), h("span", {}, "Pontos: ", placar)),
     h("div", { class: "timer" }, barra), corpo);

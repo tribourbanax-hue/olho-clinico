@@ -44,10 +44,12 @@ button{font:inherit;color:inherit;border:0;cursor:pointer}
 /* palco (imagem com zoom) */
 .palco{position:relative;width:100%;background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--sh);touch-action:none;user-select:none}
 .palco img.fig{position:absolute;left:0;top:0;transform-origin:0 0;transition:transform .9s cubic-bezier(.6,.05,.25,1);pointer-events:none;-webkit-user-drag:none}
-.alvo{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:4px solid var(--bad);box-shadow:0 0 0 3px #fff,0 0 12px rgba(229,72,77,.6);transition:left .9s cubic-bezier(.6,.05,.25,1),top .9s cubic-bezier(.6,.05,.25,1),width .9s,height .9s,margin .9s;pointer-events:none;animation:pulsa 1.2s infinite}
-.alvo.peq{width:20px;height:20px;margin:-10px 0 0 -10px;border-width:3px}
-@keyframes pulsa{50%{box-shadow:0 0 0 3px #fff,0 0 0 10px rgba(229,72,77,.25)}}
-.etq{position:absolute;transform:translate(-50%,-140%);background:var(--ink);color:#fff;font-weight:800;font-size:13px;padding:5px 9px;border-radius:9px;white-space:nowrap;opacity:0;transition:opacity .4s .7s;pointer-events:none}
+.seta{position:absolute;width:0;height:0;pointer-events:none;transition:left .9s cubic-bezier(.6,.05,.25,1),top .9s cubic-bezier(.6,.05,.25,1);filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.seta svg{position:absolute;left:0;top:-17px;transform-origin:0 17px;overflow:visible;transition:scale .9s}
+.seta.peq svg{scale:.8}
+.seta .bob{animation:bob .7s ease-in-out infinite alternate}
+@keyframes bob{from{transform:translateX(10px)}to{transform:translateX(0)}}
+.etq{position:absolute;transform:translate(-50%,-50%);z-index:2;background:var(--ink);color:#fff;font-weight:800;font-size:13px;padding:5px 9px;border-radius:9px;white-space:nowrap;opacity:0;transition:opacity .4s .7s;pointer-events:none}
 .etq.on{opacity:1}
 .cont{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);border-radius:10px;padding:4px 9px;font-size:12px;font-weight:800;color:var(--mut)}
 .qtxt{text-align:center;font-weight:800;font-size:18px;margin:14px 0 10px}

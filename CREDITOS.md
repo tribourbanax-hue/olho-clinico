@@ -27,3 +27,11 @@ Opções de uso livre já levantadas (08/11/2026), porém mais fracas que as atu
 - Pé: "202110 Dorsal view of bones of right foot.svg" (DBCLS, **CC-BY-4.0**, exige crédito) — render realista, sem cor por região.
 - Coluna: "Illu vertebral column.jpg" (SEER/NCI, **domínio público**, mas com texto e vista lateral) ou "Gray 111 - Vertebral column-coloured.png" (Gray's Anatomy, domínio público, estilo gravura).
 Ao trocar, recalibrar os `hot` em `src/figuras.js` (overlay de auditoria com grade de %, como foi feito na mão).
+
+---
+## Olho Clínico — imagens trocadas em 10/11/2026
+- `digestorio.webp` — "Digestive system without labels.svg", Mariana Ruiz Villarreal (LadyofHats), **domínio público**, Wikimedia Commons.
+- `repmasc.webp` — "Male reproductive lateral without labels.svg", Wikimedia Commons, **CC BY-SA 4.0** (recorte do painel esquerdo).
+- `repfem.webp` — "Scheme female reproductive non-labels-2.svg", Wikimedia Commons, **CC BY-SA 3.0** (recorte).
+- `urinario.webp` — mesma imagem do Corpo em Jogo, com as setas-guia apagadas digitalmente.
+Originais anteriores guardados em `img/_orig/` (fora do git).

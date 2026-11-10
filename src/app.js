@@ -196,7 +196,7 @@ function inicio() {
         h("div", { class: "barra" }, h("i", { style: `width:${(100 * d) / lista.length}%` })),
         h("small", {}, `${d} de ${lista.length} memorizadas`));
     })),
-    h("div", { class: "rodape" }, "Funciona sem internet · seu progresso fica salvo neste aparelho")
+    h("div", { class: "rodape" }, h("div", { style: "font-weight:700;color:#8a5a2b;margin-bottom:4px" }, "Feito com carinho para Pâmela e companheiros de classe 💛"), "Funciona sem internet · seu progresso fica salvo neste aparelho")
   );
 }
 

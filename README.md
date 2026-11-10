@@ -14,3 +14,5 @@ Offline, um arquivo só (`index.html`), feito para celular, progresso salvo no a
 ## Editar
 Partes, posições (`hot` em %) e dicas: `src/dados.js`. Depois: `node build.js` (gera `index.html` e confere os dados).
 Imagens: ver `CREDITOS.md`.
+
+Feito com carinho para Pâmela e companheiros de classe.
